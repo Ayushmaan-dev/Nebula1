@@ -22,7 +22,7 @@ export const connectToDatabase = async (): Promise<Mongoose> => {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URL, {
-      dbName: "imaginify",
+      dbName: "nebulaDb",
       bufferCommands: false,
     }).then((mongoose) => mongoose);
   }
