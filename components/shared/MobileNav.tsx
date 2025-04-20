@@ -3,10 +3,9 @@
 import {
   Sheet,
   SheetContent,
-  // SheetDescription,
+  SheetTrigger,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { navLinks } from "@/constants";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -19,8 +18,8 @@ const MobileNav = () => {
   const pathname = usePathname();
 
   return (
-    <header className="header">
-      <Link href={"/"} className="flex items-center gap-2 md:py-2">
+    <header className="header lg:hidden">
+      <Link href="/" className="sidebar-logo">
         <Image
           src="/assets/images/logo-text.svg"
           alt="logo"
@@ -29,7 +28,7 @@ const MobileNav = () => {
         />
       </Link>
 
-      <nav className="flex gap-2">
+      <nav className="flex items-center gap-4">
         <SignedIn>
           <UserButton afterSignOutUrl="/" />
 
@@ -44,56 +43,63 @@ const MobileNav = () => {
               />
             </SheetTrigger>
 
-            <SheetContent className="sheet-content sm:w-64 bg-white px-4 py-6 shadow-md">
-              <>
-                <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
-                </SheetHeader>
+            <SheetContent
+              side="right"
+              className="sheet-content bg-white px-4 py-6 h-full"
+            >
+              <SheetHeader>
+                <SheetTitle className="sr-only">Main Navigation</SheetTitle>
+                <Link href="/" className="sidebar-logo mb-6 block">
+                  <Image
+                    src="/assets/images/logo-text.svg"
+                    alt="logo"
+                    width={152}
+                    height={23}
+                  />
+                </Link>
+              </SheetHeader>
 
-                <Image
-                  src="/assets/images/logo-text.svg"
-                  alt="logo"
-                  width={152}
-                  height={23}
-                  priority
-                />
+              <button
+                type="button"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-secondary opacity-70 transition-all duration-200 hover:opacity-100 focus:outline-none focus:ring-0 focus:shadow-glow active:shadow-glow disabled:pointer-events-none"
+                aria-label="Close"
+              >
+                <span className="text-white">X</span>
+              </button>
 
-                <hr className="my-4 border-t border-gray-200" />
+              <ul className="header-nav_elements flex flex-col gap-3">
+                {navLinks.map((link) => {
+                  const isActive = link.route === pathname;
 
-                <ul className="header-nav_elements">
-                  {navLinks.map((link) => {
-                    const isActive = link.route === pathname;
-
-                    return (
-                      <li key={link.route}>
-                        <Link
-                          href={link.route}
-                          className={`flex items-center gap-3 px-4 py-2 rounded-md transition-colors duration-200 ${
-                            isActive
-                              ? "text-purple-700 font-semibold"
-                              : "text-gray-700"
-                          } hover:text-purple-600`}
-                        >
-                          <Image
-                            src={link.icon}
-                            alt={link.label}
-                            width={20}
-                            height={20}
-                          />
-                          {link.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </>
+                  return (
+                    <li key={link.route}>
+                      <Link
+                        href={link.route}
+                        className={`sidebar-link flex items-center gap-3 px-4 py-2 rounded-md transition-colors duration-200 ${
+                          isActive
+                            ? "gradient-text font-semibold"
+                            : "text-dark-700"
+                        }`}
+                      >
+                        <Image
+                          src={link.icon}
+                          alt={link.label}
+                          width={24}
+                          height={24}
+                        />
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             </SheetContent>
           </Sheet>
         </SignedIn>
 
         <SignedOut>
           <Button asChild className="button bg-purple-gradient bg-cover">
-            <Link href={"/sign-in"}>Login</Link>
+            <Link href="/sign-in">Login</Link>
           </Button>
         </SignedOut>
       </nav>
