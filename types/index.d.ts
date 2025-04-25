@@ -1,5 +1,6 @@
-// ====== USER PARAMS
+/* eslint-disable no-unused-vars */
 
+// ====== USER PARAMS
 declare type CreateUserParams = {
   clerkId: string;
   email: string;
@@ -17,9 +18,6 @@ declare type UpdateUserParams = {
 };
 
 // ====== IMAGE PARAMS
-
-type ImageConfig = Record<string, string | number | boolean>;
-
 declare type AddImageParams = {
   image: {
     title: string;
@@ -27,12 +25,12 @@ declare type AddImageParams = {
     transformationType: string;
     width: number;
     height: number;
-    config: ImageConfig;
+    config: any;
     secureURL: string;
     transformationURL: string;
-    aspectRatio?: string;
-    prompt?: string;
-    color?: string;
+    aspectRatio: string | undefined;
+    prompt: string | undefined;
+    color: string | undefined;
   };
   userId: string;
   path: string;
@@ -46,18 +44,16 @@ declare type UpdateImageParams = {
     transformationType: string;
     width: number;
     height: number;
-    config: ImageConfig;
+    config: any;
     secureURL: string;
     transformationURL: string;
-    aspectRatio?: string;
-    prompt?: string;
-    color?: string;
+    aspectRatio: string | undefined;
+    prompt: string | undefined;
+    color: string | undefined;
   };
   userId: string;
   path: string;
 };
-
-// ====== TRANSFORMATIONS
 
 declare type Transformations = {
   restore?: boolean;
@@ -76,7 +72,6 @@ declare type Transformations = {
 };
 
 // ====== TRANSACTION PARAMS
-
 declare type CheckoutTransactionParams = {
   plan: string;
   credits: number;
@@ -93,8 +88,6 @@ declare type CreateTransactionParams = {
   createdAt: Date;
 };
 
-// ====== TYPES
-
 declare type TransformationTypeKey =
   | "restore"
   | "fill"
@@ -103,7 +96,6 @@ declare type TransformationTypeKey =
   | "removeBackground";
 
 // ====== URL QUERY PARAMS
-
 declare type FormUrlQueryParams = {
   searchParams: string;
   key: string;
@@ -135,29 +127,8 @@ declare type TransformationFormProps = {
   config?: Transformations | null;
 };
 
-declare interface IImage {
-  title: string;
-  transformationType: string;
-  publicId: string;
-  secureUrl: string;
-  width?: number;
-  height?: number;
-  config?: ImageConfig;
-  transformationUrl?: string;
-  aspectRatio?: string;
-  color?: string;
-  prompt?: string;
-  author?: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-  };
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
 declare type TransformedImageProps = {
-  image: IImage;
+  image: any;
   type: string;
   title: string;
   transformationConfig: Transformations | null;
