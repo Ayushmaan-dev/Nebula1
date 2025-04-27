@@ -10,31 +10,24 @@
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
-    --primary: 234 85% 45%;
-    --primary-foreground: 0 0% 100%;
+    --primary-purple: 234 85% 45%;
+    --primary-purple-foreground: 0 0% 100%;
 
-    --primary-50: 226 100% 33%;
-    --primary-bg: 228 80% 4%;
+    --secondary-purple: 240 10% 30%;
+    --secondary-purple-foreground: 0 0% 100%;
 
-    --secondary: 240 10% 30%;
-    --secondary-foreground: 0 0% 100%;
-
-    --destructive: 0 85% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --accent-purple: 240 5% 50%;
+    --accent-purple-foreground: 0 0% 100%;
 
     --muted: 240 10% 90%;
     --muted-foreground: 240 5% 40%;
 
-    --accent: 240 5% 50%;
-    --accent-foreground: 0 0% 100%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --background-light: 0 0% 100%;  /* Light background */
+    --foreground-dark: 222.2 84% 4.9%; /* Dark text for contrast */
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 5% 10%;
-
-    /* 🟣 Purple Color Palette */
     --purple-100: #f4f7fe;
     --purple-200: #bcb6ff;
     --purple-400: #868cff;
@@ -66,28 +59,41 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary-purple: 210 40% 98%;
+    --primary-purple-foreground: 222.2 47.4% 11.2%;
+    --primary-purple-hover: 234 85% 40%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary-purple: 217.2 32.6% 17.5%;
+    --secondary-purple-foreground: 210 40% 98%;
+    --secondary-purple-hover: 240 10% 20%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
+    --destructive-hover: 0 70% 55%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent-purple: 217.2 32.6% 17.5%;
+    --accent-purple-foreground: 210 40% 98%;
 
     --popover: 240 6% 12%;
     --popover-foreground: 0 0% 100%;
 
     --card: 240 5% 15%;
     --card-foreground: 0 0% 100%;
+
+    --info: 210 100% 40%; /* Info color: Blue */
+    --info-foreground: 0 0% 100%; /* White text for info */
+
+    --warning: 39 100% 50%; /* Warning color: Yellow */
+    --warning-foreground: 0 0% 100%; /* White text for warning */
+
+    --success-light: 120 50% 70%; /* Light Green for success background hover */
+    --error-light: 0 80% 70%; /* Light Red for error background hover */
   }
 }
+
 
 @layer base {
   *,
@@ -476,7 +482,9 @@
   }
 
   .select-item:active {
-    background-color: hsl(var(--primary-bg)); /* Active state for dropdown item */
+    background-color: hsl(
+      var(--primary-bg)
+    ); /* Active state for dropdown item */
   }
 
   .IconButton {
@@ -490,16 +498,43 @@
     border: none;
     box-shadow: none;
   }
+/* ye theeek krrnnnaaa haiiiiiii */
+/* Success Toast */
+.success-toast {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-50)) 100%) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-radius: var(--radius) !important;
+  padding: 1rem 1.5rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.3s ease, background-color 0.3s ease !important;
+}
 
-  .success-toast {
-    background-color: #d1fae5;
-    color: #065f46;
-  }
+.success-toast:hover {
+  transform: translateY(-5px) !important;
+  background: linear-gradient(135deg, hsl(var(--primary-50)) 0%, hsl(var(--primary)) 100%) !important;
+}
 
-  .error-toast {
-    background-color: #fecaca;
-    color: #9b2c2c;
-  }
+/* Error Toast */
+.error-toast {
+  background: linear-gradient(135deg, hsl(var(--destructive)) 0%, hsl(var(--destructive-foreground)) 100%) !important;
+  color: hsl(var(--destructive-foreground)) !important;
+  border-radius: var(--radius) !important;
+  padding: 1rem 1.5rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: transform 0.3s ease, background-color 0.3s ease !important;
+}
+
+.error-toast:hover {
+  transform: translateY(-5px) !important;
+  background: linear-gradient(135deg, hsl(var(--destructive-foreground)) 0%, hsl(var(--destructive)) 100%) !important;
+}
+
+
+
+
+
 
   /* Home Page */
   .home {
