@@ -1,90 +1,98 @@
-"use client"
+"use client";
 
-import { navLinks } from '@/constants'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Button } from '../ui/button'
+import { navLinks } from "@/constants";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
 
 const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex w-[250px] min-h-screen bg-white border-r p-4 flex-col">
-      <div className="flex flex-1 flex-col gap-4 overflow-hidden">
-        <Link href="/" className="mb-6">
-          <Image src="/assets/images/logo-text.svg" alt="logo" width={180} height={28} />
+    <aside className="sidebar h-screen sticky top-0 flex flex-col bg-black/90 border-r border-white/10">
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Link href="/" className="sidebar-logo mb-8">
+          <Image
+            src="/assets/images/logo-text.svg"
+            alt="logo"
+            width={180}
+            height={28}
+          />
         </Link>
 
-        <nav className="flex flex-1 flex-col justify-between overflow-y-auto pr-2">
+        <nav className="sidebar-nav flex flex-col flex-1 justify-between">
           <SignedIn>
-            <ul className="flex flex-col gap-2">
+            <ul className="sidebar-nav_elements">
+              {/* Top links 0-6 */}
               {navLinks.slice(0, 6).map((link) => {
-                const isActive = link.route === pathname
+                const isActive = link.route === pathname;
 
                 return (
-                  <li
-                    key={link.route}
-                    className={`px-4 py-2 rounded-lg transition-colors group ${
-                      isActive ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Link className="flex items-center gap-3" href={link.route}>
-                      <Image 
+                  <li key={link.route}>
+                    <Link
+                      href={link.route}
+                      className={`sidebar-link ${
+                        isActive ? "sidebar-link--active" : ""
+                      }`}
+                    >
+                      <Image
                         src={link.icon}
                         alt={link.label}
                         width={24}
                         height={24}
-                        className={`${isActive ? 'brightness-200' : 'brightness-100 group-hover:brightness-125'}`}
+                        className="sidebar-link_icon"
                       />
                       {link.label}
                     </Link>
                   </li>
-                )
+                );
               })}
             </ul>
 
-            <ul className="flex flex-col gap-2 mt-4">
-              {navLinks.slice(6).map((link) => {
-                const isActive = link.route === pathname
+            {/* Bottom links 7+ */}
+            <div className="mt-auto">
+              <ul className="sidebar-nav_elements">
+                {navLinks.slice(6).map((link) => {
+                  const isActive = link.route === pathname;
 
-                return (
-                  <li
-                    key={link.route}
-                    className={`px-4 py-2 rounded-lg transition-colors group ${
-                      isActive ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Link className="flex items-center gap-3" href={link.route}>
-                      <Image 
-                        src={link.icon}
-                        alt={link.label}
-                        width={24}
-                        height={24}
-                        className={`${isActive ? 'brightness-200' : 'brightness-100 group-hover:brightness-125'}`}
-                      />
-                      {link.label}
-                    </Link>
-                  </li>
-                )
-              })}
-
-              <li className="flex items-center justify-center gap-2 p-4">
-                <UserButton afterSignOutUrl='/' showName />
-              </li>
-            </ul>
+                  return (
+                    <li key={link.route}>
+                      <Link
+                        href={link.route}
+                        className={`sidebar-link ${
+                          isActive ? "sidebar-link--active" : ""
+                        }`}
+                      >
+                        <Image
+                          src={link.icon}
+                          alt={link.label}
+                          width={24}
+                          height={24}
+                          className="sidebar-link_icon"
+                        />
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+                <li className="flex-center cursor-pointer gap-2 p-4">
+                  <UserButton afterSignOutUrl="/" showName />
+                </li>
+              </ul>
+            </div>
           </SignedIn>
 
           <SignedOut>
-            <Button asChild className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90">
+            <Button asChild className="button">
               <Link href="/sign-in">Login</Link>
             </Button>
           </SignedOut>
         </nav>
       </div>
     </aside>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

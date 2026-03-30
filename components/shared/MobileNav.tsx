@@ -18,7 +18,7 @@ const MobileNav = () => {
   const pathname = usePathname();
 
   return (
-    <header className="header lg:hidden">
+    <header className="lg:hidden bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white py-4 px-6 shadow-lg border-b border-gray-800 flex items-center justify-between">
       <Link href="/" className="sidebar-logo">
         <Image
           src="/assets/images/logo-text.svg"
@@ -45,7 +45,7 @@ const MobileNav = () => {
 
             <SheetContent
               side="right"
-              className="sheet-content bg-white px-4 py-6 h-full"
+              className="sheet-content bg-black text-white px-4 py-6 h-full shadow-lg rounded-l-lg"
             >
               <SheetHeader>
                 <SheetTitle className="sr-only">Main Navigation</SheetTitle>
@@ -59,15 +59,15 @@ const MobileNav = () => {
                 </Link>
               </SheetHeader>
 
-              <button
+              {/* <button
                 type="button"
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-secondary opacity-70 transition-all duration-200 hover:opacity-100 focus:outline-none focus:ring-0 focus:shadow-glow active:shadow-glow disabled:pointer-events-none"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-800 opacity-80 transition-all duration-200 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 aria-label="Close"
               >
                 <span className="text-white">X</span>
-              </button>
+              </button> */}
 
-              <ul className="header-nav_elements flex flex-col gap-3">
+              <ul className="header-nav_elements flex flex-col gap-4">
                 {navLinks.map((link) => {
                   const isActive = link.route === pathname;
 
@@ -75,10 +75,10 @@ const MobileNav = () => {
                     <li key={link.route}>
                       <Link
                         href={link.route}
-                        className={`sidebar-link flex items-center gap-3 px-4 py-2 rounded-md transition-colors duration-200 ${
+                        className={`sidebar-link flex items-center gap-4 px-4 py-3 rounded-md transition-all duration-200 ${
                           isActive
-                            ? "gradient-text font-semibold"
-                            : "text-dark-700"
+                            ? "bg-gradient-to-r from-gray-700 to-black text-white font-semibold shadow-md"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white"
                         }`}
                       >
                         <Image
@@ -86,6 +86,11 @@ const MobileNav = () => {
                           alt={link.label}
                           width={24}
                           height={24}
+                          className={`transition-all duration-200 ${
+                            isActive
+                              ? "brightness-200"
+                              : "brightness-100 group-hover:brightness-125"
+                          }`}
                         />
                         {link.label}
                       </Link>
@@ -98,7 +103,10 @@ const MobileNav = () => {
         </SignedIn>
 
         <SignedOut>
-          <Button asChild className="button bg-purple-gradient bg-cover">
+          <Button
+            asChild
+            className="button"
+          >
             <Link href="/sign-in">Login</Link>
           </Button>
         </SignedOut>

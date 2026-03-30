@@ -21,7 +21,7 @@ import {
   transformationTypes,
 } from "@/constants";
 import { CustomField } from "./CustomField";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { updateCredits } from "@/lib/actions/user.actions";
 import MediaUploader from "./MediaUploader";
@@ -30,6 +30,7 @@ import TransformedImage from "./TransformedImage";
 import { getCldImageUrl } from "next-cloudinary";
 import { addImage, updateImage } from "@/lib/actions/image.actions";
 import { useRouter } from "next/navigation";
+import { InsufficientCreditsModal } from "./InsufficientCreditsModal";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -47,7 +48,7 @@ const TransformationForm = ({
   creditBalance,
   config = null,
 }: TransformationFormProps) => {
-  const TransformationType = transformationTypes[type];
+  const transformationType = transformationTypes[type];
   const [image, setImage] = useState(data);
   const [newTransformation, setNewTransformation] =
     useState<Transformations | null>(null);
@@ -152,7 +153,7 @@ const TransformationForm = ({
       height: imageSize.height,
     }));
 
-    setNewTransformation(TransformationType.config);
+    setNewTransformation(transformationType.config);
 
     return onChangeField(value);
   };
@@ -168,12 +169,11 @@ const TransformationForm = ({
         ...prevState,
         [fieldName === "prompt" ? "prompt" : "to"]: value,
       }));
+    }, 1000)();
 
-      return onChangeField(value);
-    }, 1000);
+    return onChangeField(value);
   };
 
-  // TODO: Update creditFee to something else
   const onTransformHandler = async () => {
     setIsTransforming(true);
 
@@ -184,20 +184,36 @@ const TransformationForm = ({
     setNewTransformation(null);
 
     startTransition(async () => {
-      await updateCredits(userId, -1);
+      await updateCredits(userId, creditFee);
     });
   };
 
+  useEffect(() => {
+    if (image && (type === "restore" || type === "removeBackground")) {
+      setNewTransformation(transformationType.config);
+    }
+  }, [image, transformationType.config, type]);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-10 px-4 md:px-10 py-8 bg-background rounded-2xl shadow-md"
+      >
+        {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
+
         {/* Title field - closer to subtitle */}
         <div className="mt-4">
           <CustomField
             control={form.control}
             name="title"
             formLabel="Image Title"
-            render={({ field }) => <Input {...field} className="input-field" />}
+            render={({ field }) => (
+              <Input
+                {...field}
+                className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            )}
           />
         </div>
 
@@ -212,13 +228,18 @@ const TransformationForm = ({
                 onValueChange={(value) =>
                   onSelectFieldHandler(value, field.onChange)
                 }
+                value={field.value}
               >
-                <SelectTrigger className="select-field">
+                <SelectTrigger className="w-full border-input bg-background text-foreground">
                   <SelectValue placeholder="Select size" />
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(aspectRatioOptions).map((key) => (
-                    <SelectItem key={key} value={key} className="select-item">
+                    <SelectItem
+                      key={key}
+                      value={key}
+                      className="cursor-pointer hover:bg-muted"
+                    >
                       {aspectRatioOptions[key as AspectRatioKey].label}
                     </SelectItem>
                   ))}
@@ -248,7 +269,7 @@ const TransformationForm = ({
                       field.onChange
                     )
                   }
-                  className="input-field"
+                  className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               )}
             />
@@ -269,7 +290,7 @@ const TransformationForm = ({
                         field.onChange
                       )
                     }
-                    className="input-field"
+                    className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 )}
               />
@@ -307,7 +328,7 @@ const TransformationForm = ({
         <div className="flex flex-col gap-4 pt-4">
           <Button
             type="button"
-            className="submit-button capitalize"
+            className="capitalize bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white hover:opacity-90 focus:ring-4 focus:ring-purple-300 disabled:bg-gray-600 disabled:text-gray-400"
             disabled={isTransforming || newTransformation === null}
             onClick={onTransformHandler}
           >
@@ -316,7 +337,7 @@ const TransformationForm = ({
 
           <Button
             type="submit"
-            className="submit-button capitalize"
+            className="capitalize bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 text-white hover:opacity-90 focus:ring-4 focus:ring-green-300 disabled:bg-gray-600 disabled:text-gray-400"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "Save Image"}
